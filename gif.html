@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang='en-us'>
+
+<head>
+    <title>GIFTastic</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src='http://code.jquery.com/jquery-2.2.3.min.js'></script>
+    <link href="gif.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="buttonArea">
+        <button data-sport="football">Football</button>
+        <button data-sport="baseball">Baseball</button>
+        <button data-sport="basketball">Basketball</button>
+    </div>
+
+    <div class="newButton">
+        <form>
+            Add a sport<br>
+            <input class="userInput" type="text"><br>
+            <input class="submit" type="submit">
+        </form>
+    </div>
+
+    <div id="GIFArea"></div>
+
+
+    <script type="text/javascript">
+        var newSport = [];
+
+        $('button').on('click', function() {
+            var x = $(this).data('sport');
+
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + x + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+            $.ajax({
+                    url: queryURL,
+                    method: 'GET'
+                })
+                .done(function(response) {
+                    for (var i = 0; i < response.data.length; i++) {
+                        var animalDiv = $('<div>');
+                        var p = $('<p>').text("Rating: " + response.data[i].rating);
+                        var animalImage = $('<img>');
+                        animalImage.attr('src', response.data[i].images.fixed_height.url);
+                        animalDiv.append(p);
+                        animalDiv.append(animalImage);
+                        $('#GIFArea').prepend(animalDiv);
+                    }
+                })
+            $('#GIFArea').empty();
+            // $('.submit').on('click', function(){ // $(newSport).push(".userInput"); // console.log(newSport); // })
+        })
+    </script>
+
+</body>
