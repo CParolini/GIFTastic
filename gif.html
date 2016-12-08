@@ -4,7 +4,7 @@
 <head>
     <title>GIFTastic</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src='http://code.jquery.com/jquery-2.2.3.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js'></script>
     <link href="gif.css" rel="stylesheet">
 </head>
 
@@ -20,7 +20,7 @@
         <input id="add-sport" type="submit" value="Add a Sport">
     </form>
 
-    <div id="GIFArea"></div>
+    <div class="col-md-10" id="GIFArea"></div>
 
 
     <script type="text/javascript">
@@ -40,31 +40,31 @@
                         var sportDiv = $('<div>');
                         var p = $('<p>').text("Rating: " + response.data[i].rating);
                         var sportImage = $('<img>');
-                        sportImage.attr('src', response.data[i].images.fixed_height.url);
-                        sportDiv.append(p);
+                        sportImage.attr("src", response.data[i].images.fixed_height.url);
+                        sportImage.attr("data-still", response.data[i].images.fixed_height_still.url);
+                        sportImage.attr("data-animate", response.data[i].images.fixed_height_downsampled.url);
+                        sportImage.attr("data-state", "animate");
+                        sportImage.attr("class", "gif");
+                        sportDiv.prepend(p);
                         sportDiv.append(sportImage);
                         $('#GIFArea').prepend(sportDiv);
                     }
-                    console.log(response);
                 })
             $('#GIFArea').empty();
-            // $('.submit').on('click', function(){ // $(newSport).push(".userInput"); // console.log(newSport); // })
         });
 
-        $(".gif").on("click", function() {
-          // The attr jQuery method allows us to get or set the value of any attribute  on our HTML element
-          var state = $(this).attr("data-state");
-
-          if (state === "still") {
-            $(this).attr("src", $(this).data("animate"));
-            $(this).attr("data-state", "animate");
-          }
-          else {
-            // If the clicked image's state is still, update its src attribute to what its data-animate value is.
-            // Then, set the image's data-state to animate
-            $(this).attr("src", $(this).data("still"));
-            $(this).attr("data-state", "still");
-          }
+        $(document).on("click", ".gif", function() {
+            // The attr jQuery method allows us to get or set the value of any attribute  on our HTML element
+            var state = $(this).attr("data-state");
+            if (state === "animate") {
+                $(this).attr("src", $(this).data("still"));
+                $(this).attr("data-state", "still");
+            } else {
+                // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+                // Then, set the image's data-state to animate
+                $(this).attr("src", $(this).data("animate"));
+                $(this).attr("data-state", "animate");
+            }
         });
 
         function renderButtons() {
@@ -100,13 +100,13 @@
             var a = $("<button>");
             // Adds a class of movie to our button
             a.addClass("sport");
-            console.log(sportInput);
             // Added a data-attribute
             a.attr("data-name", sportInput);
             // Provided the initial button text
             a.text(sportInput);
             // Added the button to the buttons-view div
             $(".buttonArea").append(a);
+            $("#sport-input").val("");
         });
 
         renderButtons();
